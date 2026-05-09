@@ -2,7 +2,7 @@
 
 Este é um sistema simples desenvolvido em PHP projetado para ajudar no gerenciamento diário de um restaurante. O sistema utiliza um banco de dados SQLite para armazenamento leve e fácil configuração.
 
-## ⚙️ Funcionalidades
+## Funcionalidades
 
 Baseado na estrutura do projeto, o sistema conta com as seguintes funcionalidades principais:
 
@@ -10,13 +10,13 @@ Baseado na estrutura do projeto, o sistema conta com as seguintes funcionalidade
 - **Gerenciamento de Mesas** (`pages/mesas.php`): Controle da disponibilidade, reservas e status das mesas do estabelecimento.
 - **Gerenciamento de Pedidos** (`pages/pedidos.php`): Realização e acompanhamento dos pedidos feitos nas mesas pelos clientes.
 
-## 🛠️ Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 - **Backend:** PHP
 - **Banco de Dados:** SQLite (`database/sqlite.php`)
 - **Estilização:** CSS (`css/style.css`)
 
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```text
 ├── config/
@@ -32,7 +32,7 @@ Baseado na estrutura do projeto, o sistema conta com as seguintes funcionalidade
 └── index.php            # Ponto de entrada do sistema (tela inicial)
 ```
 
-## 🚀 Como Executar
+## Como Executar
 
 1. Certifique-se de ter um servidor web local configurado com suporte a PHP (como XAMPP, WAMP ou o servidor embutido do PHP).
 2. O servidor deve ter a extensão SQLite habilitada em seu `php.ini`.
