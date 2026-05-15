@@ -207,5 +207,10 @@ $mesas = query_all("SELECT * FROM mesas ORDER BY numero ASC");
         </main>
     </div>
 </body>
+<footer>
+    <div class="container" style="text-align: center; padding: 20px 0; color: #666; font-size: 0.9em; margin-top: 20px;">
+        &copy; <?=date("Y")?> Sistema RestauSys. Todos os direitos reservados.
+    </div>
+</footer>
 </html>
 

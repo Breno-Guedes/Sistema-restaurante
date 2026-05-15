@@ -1,3 +1,22 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap");
+
+:root {
+    --bg-start: #fef3e7;
+    --bg-end: #e8f6f2;
+    --surface: #ffffff;
+    --surface-muted: #f7f5f2;
+    --ink: #1f2933;
+    --muted: #6b7280;
+    --accent: #0f766e;
+    --accent-strong: #115e59;
+    --accent-soft: #e7f7f4;
+    --accent-2: #f59e0b;
+    --accent-3: #ef4444;
+    --accent-4: #0ea5e9;
+    --shadow-strong: 0 20px 60px rgba(15, 23, 42, 0.22);
+    --shadow-soft: 0 4px 16px rgba(15, 23, 42, 0.08);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -5,25 +24,27 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #7dbb4a 100%);
+    font-family: "Plus Jakarta Sans", "Noto Sans", sans-serif;
+    background: radial-gradient(1200px 600px at 10% -10%, #fff6ec 0%, transparent 60%),
+        radial-gradient(900px 500px at 100% 0%, #e7fbf6 0%, transparent 55%),
+        linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
     min-height: 100vh;
     padding: 20px;
-    color: #333;
+    color: var(--ink);
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    background: white;
+    background: var(--surface);
     border-radius: 12px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    box-shadow: var(--shadow-strong);
     overflow: hidden;
 }
 
 header {
-    background: linear-gradient(135deg, #838baf 0%, #c7cace 100%);
-    color: rgb(15, 15, 15);
+    background: linear-gradient(135deg, #f2fbf8 0%, #e8f2f1 100%);
+    color: var(--ink);
     padding: 40px 30px;
     text-align: center;
     position: relative;
@@ -36,7 +57,7 @@ header::after {
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, #ffc107, #28a745, #17a2b8);
+    background: linear-gradient(90deg, var(--accent-2), #22c55e, var(--accent-4));
 }
 
 .header-content h1 {
@@ -58,21 +79,21 @@ main {
 
 /* ============ NAVBAR ============ */
 .navbar {
-    background: white;
+    background: var(--surface);
     padding: 15px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-soft);
     margin-bottom: 20px;
     border-radius: 8px;
-    border-bottom: 3px solid #667eea;
+    border-bottom: 3px solid var(--accent);
 }
 
 .nav-logo {
     font-size: 1.5em;
     font-weight: 800;
-    color: #667eea;
+    color: var(--accent);
     letter-spacing: -0.5px;
 }
 
@@ -92,12 +113,12 @@ main {
 }
 
 .nav-links a:hover {
-    background: #f0f4ff;
-    color: #667eea;
+    background: var(--accent-soft);
+    color: var(--accent);
 }
 
 .nav-links a.active {
-    background: #667eea;
+    background: var(--accent);
     color: white;
 }
 
@@ -154,15 +175,15 @@ main {
 .secao {
     margin-bottom: 30px;
     padding: 30px;
-    background: #f8f9fa;
+    background: var(--surface-muted);
     border-radius: 10px;
-    border-left: 5px solid #667eea;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-left: 5px solid var(--accent);
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
     transition: box-shadow 0.3s;
 }
 
 .secao:hover {
-    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
 }
 
 .secao h2 {
@@ -175,18 +196,18 @@ main {
 }
 
 .secao-criar {
-    border-left-color: #28a745;
-    background: linear-gradient(135deg, #f0fdf4 0%, #f8f9fa 100%);
+    border-left-color: #22c55e;
+    background: linear-gradient(135deg, #f0fdf4 0%, var(--surface-muted) 100%);
 }
 
 .secao-resumo {
-    border-left-color: #17a2b8;
-    background: linear-gradient(135deg, #f0f7ff 0%, #f8f9fa 100%);
+    border-left-color: var(--accent-4);
+    background: linear-gradient(135deg, #f0f7ff 0%, var(--surface-muted) 100%);
 }
 
 .secao-adicionar {
-    border-left-color: #ffc107;
-    background: linear-gradient(135deg, #fffaf0 0%, #f8f9fa 100%);
+    border-left-color: var(--accent-2);
+    background: linear-gradient(135deg, #fff7ed 0%, var(--surface-muted) 100%);
 }
 
 .secao-itens {
@@ -194,8 +215,8 @@ main {
 }
 
 .secao-pagamento {
-    border-left-color: #ffc107;
-    background: linear-gradient(135deg, #fff5e6 0%, #ffe6e6 100%);
+    border-left-color: var(--accent-2);
+    background: linear-gradient(135deg, #fff3e6 0%, #fff1f2 100%);
 }
 
 /* ============ RESUMO DO PEDIDO ============ */
@@ -207,7 +228,7 @@ main {
 }
 
 .resumo-card {
-    background: white;
+    background: var(--surface);
     padding: 20px;
     border-radius: 8px;
     border: 2px solid #e0e0e0;
@@ -216,8 +237,8 @@ main {
 }
 
 .resumo-card:hover {
-    border-color: #667eea;
-    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);
+    border-color: var(--accent);
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
     transform: translateY(-2px);
 }
 
@@ -231,7 +252,7 @@ main {
 
 .resumo-valor {
     font-size: 1.5em;
-    color: #333;
+    color: var(--ink);
     font-weight: 700;
     margin: 10px 0;
 }
@@ -242,7 +263,7 @@ main {
 }
 
 .resumo-total {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
     color: white;
     border: none;
 }
@@ -306,9 +327,9 @@ main {
 .form-grupo input:focus,
 .form-grupo select:focus {
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-    background-color: #f8f9fa;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.12);
+    background-color: #f8fafc;
 }
 
 .form-grupo input[type="number"] {
@@ -341,7 +362,7 @@ main {
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.3s;
-    background: white;
+    background: var(--surface);
 }
 
 .opcao-pagamento input {
@@ -350,12 +371,12 @@ main {
 }
 
 .opcao-pagamento:hover {
-    border-color: #ffc107;
-    background: #fffaf0;
+    border-color: var(--accent-2);
+    background: #fff7ed;
 }
 
 .opcao-pagamento input:checked ~ span {
-    color: #ffc107;
+    color: var(--accent-2);
     font-weight: 600;
 }
 
@@ -389,7 +410,7 @@ main {
 }
 
 .btn-adicionar {
-    background: linear-gradient(135deg, #17a2b8 0%, #20c997 100%);
+    background: linear-gradient(135deg, var(--accent-4) 0%, #14b8a6 100%);
     color: white;
 }
 
@@ -412,7 +433,7 @@ main {
 }
 
 .btn-finalizar {
-    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    background: linear-gradient(135deg, var(--accent-2) 0%, #f97316 100%);
     color: white;
     font-weight: 700;
     padding: 15px 40px;
@@ -441,7 +462,7 @@ main {
 }
 
 .tabela thead {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
     color: white;
 }
 
@@ -470,7 +491,7 @@ main {
 .item-numero {
     text-align: center;
     font-weight: 600;
-    color: #667eea;
+    color: var(--accent);
 }
 
 .item-nome {
@@ -494,7 +515,7 @@ main {
 .item-subtotal {
     text-align: right;
     font-weight: 600;
-    color: #667eea;
+    color: var(--accent);
 }
 
 .item-acao {
@@ -513,13 +534,13 @@ main {
 }
 
 .total-pedido {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
     color: white;
     padding: 30px;
     border-radius: 10px;
     margin-bottom: 30px;
     text-align: center;
-    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 10px 26px rgba(15, 118, 110, 0.25);
 }
 
 .total-label {
@@ -536,10 +557,10 @@ main {
 }
 
 .formulario-pagamento {
-    background: white;
+    background: var(--surface);
     padding: 30px;
     border-radius: 10px;
-    border: 2px solid #ffc107;
+    border: 2px solid var(--accent-2);
 }
 
 /* ============ ALERTAS ============ */
@@ -567,7 +588,7 @@ main {
 .alerta-texto {
     font-size: 1.2em;
     font-weight: 600;
-    color: #333;
+    color: var(--ink);
     margin-bottom: 10px;
 }
 
