@@ -167,6 +167,27 @@ $clientes = query_all("SELECT id_cliente, nome FROM clientes ORDER BY nome");
 $mesas = query_all("SELECT id_mesa, numero, capacidade, status FROM mesas ORDER BY numero");
 $produtos = query_all("SELECT id_produto, nome, descricao, preco, estoque FROM produtos ORDER BY nome");
 
+$pedidos_abertos = query_all(
+    "SELECT p.id_pedido, c.nome, m.numero, p.data_pedido
+     FROM pedidos p
+     JOIN clientes c ON p.id_cliente = c.id_cliente
+     JOIN mesas m ON p.id_mesa = m.id_mesa
+     WHERE p.status = 'aberto'
+     ORDER BY p.data_pedido DESC"
+);
+
+$pedidos_finalizados = query_all(
+    "SELECT p.id_pedido, c.nome, m.numero, p.data_pedido, p.forma_de_pagamento,
+            SUM(ip.quantidade * ip.preco_unitario) as total
+     FROM pedidos p
+     JOIN clientes c ON p.id_cliente = c.id_cliente
+     JOIN mesas m ON p.id_mesa = m.id_mesa
+     LEFT JOIN itens_pedido ip ON p.id_pedido = ip.id_pedido
+     WHERE p.status = 'fechado'
+     GROUP BY p.id_pedido
+     ORDER BY p.data_pedido DESC"
+);
+
 // Se houver um pedido em andamento, buscar seus itens e informações
 $itens_pedido = [];
 $total_pedido = 0;
@@ -180,7 +201,7 @@ if ($id_pedido_atual) {
     );
 
     $info_mesa = query_one(
-        "SELECT m.numero, m.capacidade FROM mesas m 
+        "SELECT m.id_mesa, m.numero, m.capacidade FROM mesas m 
          JOIN pedidos p ON m.id_mesa = p.id_mesa 
          WHERE p.id_pedido = ?", 
         [$id_pedido_atual]
@@ -289,6 +310,76 @@ if ($id_pedido_atual) {
                         </button>
                     </div>
                 </form>
+            </section>
+
+            <section class="secao secao-lista">
+                <h2>Pedidos em Aberto</h2>
+                <?php if (empty($pedidos_abertos)): ?>
+                    <p style="color: #666;">Nenhum pedido em aberto no momento.</p>
+                <?php else: ?>
+                    <div class="tabela-container">
+                        <table class="tabela">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Cliente</th>
+                                    <th>Mesa</th>
+                                    <th>Data</th>
+                                    <th>Ação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($pedidos_abertos as $p): ?>
+                                    <tr>
+                                        <td><strong>#<?php echo $p['id_pedido']; ?></strong></td>
+                                        <td><?php echo htmlspecialchars($p['nome']); ?></td>
+                                        <td>Mesa <?php echo $p['numero']; ?></td>
+                                        <td><?php echo date('d/m/Y H:i', strtotime($p['data_pedido'])); ?></td>
+                                        <td>
+                                            <a class="btn btn-criar" style="width: auto;" href="pedidos.php?id=<?php echo $p['id_pedido']; ?>">
+                                                Ver/Finalizar
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php endif; ?>
+            </section>
+
+            <section class="secao secao-lista" id="finalizados">
+                <h2>Pedidos Finalizados</h2>
+                <?php if (empty($pedidos_finalizados)): ?>
+                    <p style="color: #666;">Nenhum pedido finalizado ainda.</p>
+                <?php else: ?>
+                    <div class="tabela-container">
+                        <table class="tabela">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Cliente</th>
+                                    <th>Mesa</th>
+                                    <th>Data</th>
+                                    <th>Pagamento</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($pedidos_finalizados as $p): ?>
+                                    <tr>
+                                        <td><strong>#<?php echo $p['id_pedido']; ?></strong></td>
+                                        <td><?php echo htmlspecialchars($p['nome']); ?></td>
+                                        <td>Mesa <?php echo $p['numero']; ?></td>
+                                        <td><?php echo date('d/m/Y H:i', strtotime($p['data_pedido'])); ?></td>
+                                        <td><?php echo htmlspecialchars($p['forma_de_pagamento']); ?></td>
+                                        <td>R$ <?php echo number_format((float)($p['total'] ?? 0), 2, ',', '.'); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php endif; ?>
             </section>
 
             <!-- SEÇÃO 2: RESUMO DO PEDIDO ATUAL -->
@@ -419,7 +510,7 @@ if ($id_pedido_atual) {
                             <form method="POST" class="formulario-pagamento">
                                 <input type="hidden" name="acao" value="finalizar_pedido">
                                 <input type="hidden" name="id_pedido" value="<?php echo $id_pedido_atual; ?>">
-                                <input type="hidden" name="id_mesa" value="<?php echo $info_mesa ? $id_pedido_atual : 0; ?>">
+                                <input type="hidden" name="id_mesa" value="<?php echo $info_mesa ? $info_mesa['id_mesa'] : 0; ?>">
 
                                 <div class="form-grupo">
                                     <label for="forma_pagamento">

@@ -31,6 +31,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $tipo_mensagem = "erro";
         }
     }
+
+    if ($acao === "liberar_mesa") {
+        $id_mesa = (int)$_POST["id_mesa"];
+        try {
+            execute_query("UPDATE mesas SET status = 'livre' WHERE id_mesa = ?", [$id_mesa]);
+            $mensagem = "Mesa liberada com sucesso!";
+            $tipo_mensagem = "sucesso";
+        } catch(Exception $e) {
+            $mensagem = "Erro ao liberar mesa.";
+            $tipo_mensagem = "erro";
+        }
+    }
 }
 
 $mesas = query_all("SELECT * FROM mesas ORDER BY numero ASC");
@@ -105,6 +117,13 @@ $mesas = query_all("SELECT * FROM mesas ORDER BY numero ASC");
                                         <span class="status-badge status-<?=$m["status"]?>"><?=$m["status"]?></span>
                                     </td>
                                     <td>
+                                        <?php if ($m["status"] !== "livre"): ?>
+                                            <form method="POST" style="display:inline;" onsubmit="return confirm('Deseja liberar esta mesa?');">
+                                                <input type="hidden" name="acao" value="liberar_mesa">
+                                                <input type="hidden" name="id_mesa" value="<?=$m["id_mesa"]?>">
+                                                <button type="submit" class="btn btn-adicionar" title="Liberar">Liberar</button>
+                                            </form>
+                                        <?php endif; ?>
                                         <form method="POST" style="display:inline;" onsubmit="return confirm('Deseja remover esta mesa?');">
                                             <input type="hidden" name="acao" value="remover_mesa">
                                             <input type="hidden" name="id_mesa" value="<?=$m["id_mesa"]?>">

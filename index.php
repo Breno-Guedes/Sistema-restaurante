@@ -96,6 +96,7 @@ $mesas = query_all("SELECT * FROM mesas ORDER BY numero ASC");
             
             <div style="display: flex; gap: 10px; margin-bottom: 20px;">
                 <a href="pages/pedidos.php" class="btn-link">Ir para PDV (Novo Pedido/Ponto de Venda)</a>
+                <a href="pages/pedidos.php#finalizados" class="btn-link">Ver Pedidos Finalizados</a>
             </div>
             
             <div class="dashboard-grid">
@@ -115,7 +116,10 @@ $mesas = query_all("SELECT * FROM mesas ORDER BY numero ASC");
                         <ul style="list-style: none; padding: 0;">
                             <?php foreach($pedidos_abertos as $p): ?>
                                 <li style="margin-bottom: 10px; padding: 10px; background: #f8f9fa; border-radius: 5px; display: flex; justify-content: space-between; align-items: center;">
-                                    <span><strong>#<?=$p["id_pedido"]?></strong> - <?=$p["nome"]?> (Mesa <?=$p["numero"]?>)</span>
+                                    <span>
+                                        <strong>#<?=$p["id_pedido"]?></strong> - <?=$p["nome"]?> (Mesa <?=$p["numero"]?>)
+                                        <small style="display: block; color: #666;">Data: <?=date("d/m/Y H:i", strtotime($p["data_pedido"]))?></small>
+                                    </span>
                                     <a href="pages/pedidos.php?id=<?=$p["id_pedido"]?>" class="btn btn-criar" style="padding: 5px 10px; font-size: 0.8em; width: auto;">Ver/Finalizar</a>
                                 </li>
                             <?php endforeach; ?>
