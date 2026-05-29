@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . "/../config/config.php";
 
+exigir_autenticacao();
+
 $mensagem = "";
 $tipo_mensagem = "";
 
@@ -8,27 +10,37 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $acao = $_POST["acao"] ?? "";
     
     if ($acao === "adicionar_mesa") {
-        $numero = (int)$_POST["numero"];
-        $capacidade = (int)$_POST["capacidade"];
-        try {
-            execute_query("INSERT INTO mesas (numero, capacidade) VALUES (?, ?)", [$numero, $capacidade]);
-            $mensagem = "Mesa $numero adicionada com sucesso!";
-            $tipo_mensagem = "sucesso";
-        } catch(Exception $e) {
-            $mensagem = "Erro ao adicionar mesa. Número pode já existir.";
+        if (!usuario_admin()) {
+            $mensagem = "Acesso negado para adicionar mesas.";
             $tipo_mensagem = "erro";
+        } else {
+            $numero = (int)$_POST["numero"];
+            $capacidade = (int)$_POST["capacidade"];
+            try {
+                execute_query("INSERT INTO mesas (numero, capacidade) VALUES (?, ?)", [$numero, $capacidade]);
+                $mensagem = "Mesa $numero adicionada com sucesso!";
+                $tipo_mensagem = "sucesso";
+            } catch(Exception $e) {
+                $mensagem = "Erro ao adicionar mesa. Número pode já existir.";
+                $tipo_mensagem = "erro";
+            }
         }
     }
 
     if ($acao === "remover_mesa") {
-        $id_mesa = (int)$_POST["id_mesa"];
-        try {
-            execute_query("DELETE FROM mesas WHERE id_mesa = ?", [$id_mesa]);
-            $mensagem = "Mesa removida com sucesso!";
-            $tipo_mensagem = "sucesso";
-        } catch(Exception $e) {
-            $mensagem = "Erro: Mesa possui pedidos vinculados e não pode ser removida!";
+        if (!usuario_admin()) {
+            $mensagem = "Acesso negado para remover mesas.";
             $tipo_mensagem = "erro";
+        } else {
+            $id_mesa = (int)$_POST["id_mesa"];
+            try {
+                execute_query("DELETE FROM mesas WHERE id_mesa = ?", [$id_mesa]);
+                $mensagem = "Mesa removida com sucesso!";
+                $tipo_mensagem = "sucesso";
+            } catch(Exception $e) {
+                $mensagem = "Erro: Mesa possui pedidos vinculados e não pode ser removida!";
+                $tipo_mensagem = "erro";
+            }
         }
     }
 
@@ -56,18 +68,7 @@ $mesas = query_all("SELECT * FROM mesas ORDER BY numero ASC");
 </head>
 <body>
     <div class="container">
-        <nav class="navbar">
-            <div class="nav-logo">🍔 RestauSys</div>
-            <ul class="nav-links">
-                <li><a href="../index.php">Dashboard</a></li>
-                <li><a href="pedidos.php">PDV (Caixa)</a></li>
-                <li><a href="clientes.php">Clientes</a></li>
-                <li><a href="mesas.php" class="active">Mesas</a></li>
-                <li><a href="produtos.php">Produtos</a></li>
-                <li><a href="funcionarios.php">Funcionários</a></li>
-                <li><a href="despesas.php">Despesas</a></li>
-            </ul>
-        </nav>
+        <?php render_navegacao('mesas', '../'); ?>
 
         <header>
             <div class="header-content">
@@ -81,22 +82,29 @@ $mesas = query_all("SELECT * FROM mesas ORDER BY numero ASC");
             <?php endif; ?>
             
             <div class="dashboard-grid">
-                <!-- Adicionar Mesa -->
-                <div class="card" style="border-top-color: #6c757d;">
-                    <h3>➕ Nova Mesa</h3>
-                    <form method="POST" class="formulario">
-                        <input type="hidden" name="acao" value="adicionar_mesa">
-                        <div class="form-grupo">
-                            <label>Número da Mesa:</label>
-                            <input type="number" name="numero" required>
-                        </div>
-                        <div class="form-grupo">
-                            <label>Capacidade (Pessoas):</label>
-                            <input type="number" name="capacidade" required>
-                        </div>
-                        <button type="submit" class="btn " style="background: #6c757d; color: white;">Salvar Mesa</button>
-                    </form>
-                </div>
+                <?php if (usuario_admin()): ?>
+                    <!-- Adicionar Mesa -->
+                    <div class="card" style="border-top-color: #6c757d;">
+                        <h3>➕ Nova Mesa</h3>
+                        <form method="POST" class="formulario">
+                            <input type="hidden" name="acao" value="adicionar_mesa">
+                            <div class="form-grupo">
+                                <label>Número da Mesa:</label>
+                                <input type="number" name="numero" required>
+                            </div>
+                            <div class="form-grupo">
+                                <label>Capacidade (Pessoas):</label>
+                                <input type="number" name="capacidade" required>
+                            </div>
+                            <button type="submit" class="btn " style="background: #6c757d; color: white;">Salvar Mesa</button>
+                        </form>
+                    </div>
+                <?php else: ?>
+                    <div class="card" style="border-top-color: #6c757d;">
+
+                        <p style="color: #666;">O perfil Garçom pode apenas consultar e liberar mesas ocupadas.</p>
+                    </div>
+                <?php endif; ?>
 
                 <!-- Lista de Mesas -->
                 <div class="card" style="border-top-color: #e83e8c;">
@@ -108,7 +116,7 @@ $mesas = query_all("SELECT * FROM mesas ORDER BY numero ASC");
                                     <th>Mesa</th>
                                     <th>Capacidade</th>
                                     <th>Status</th>
-                                    <th>Ações</th>
+                                    <?php if (usuario_admin()): ?><th>Ações</th><?php else: ?><th>Operação</th><?php endif; ?>
                                 </tr>
                             </thead>
                             <tbody>
@@ -126,12 +134,16 @@ $mesas = query_all("SELECT * FROM mesas ORDER BY numero ASC");
                                                 <input type="hidden" name="id_mesa" value="<?=$m["id_mesa"]?>">
                                                 <button type="submit" class="btn btn-adicionar" title="Liberar">Liberar</button>
                                             </form>
+                                        <?php else: ?>
+                                            <span style="color: #6b7280;">Mesa livre</span>
                                         <?php endif; ?>
-                                        <form method="POST" style="display:inline;" onsubmit="return confirm('Deseja remover esta mesa?');">
-                                            <input type="hidden" name="acao" value="remover_mesa">
-                                            <input type="hidden" name="id_mesa" value="<?=$m["id_mesa"]?>">
-                                            <button type="submit" class="btn btn-remover" title="Remover">🗑️</button>
-                                        </form>
+                                        <?php if (usuario_admin()): ?>
+                                            <form method="POST" style="display:inline;" onsubmit="return confirm('Deseja remover esta mesa?');">
+                                                <input type="hidden" name="acao" value="remover_mesa">
+                                                <input type="hidden" name="id_mesa" value="<?=$m["id_mesa"]?>">
+                                                <button type="submit" class="btn btn-remover" title="Remover">🗑️</button>
+                                            </form>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>

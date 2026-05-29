@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . "/../config/config.php";
 
+exigir_autenticacao();
+
 $mensagem = "";
 $tipo_mensagem = "";
 
@@ -22,14 +24,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
     
     if ($acao === "remover_cliente") {
-        $id_cliente = (int)$_POST["id_cliente"];
-        try {
-            execute_query("DELETE FROM clientes WHERE id_cliente = ?", [$id_cliente]);
-            $mensagem = "Cliente removido com sucesso!";
-            $tipo_mensagem = "sucesso";
-        } catch(Exception $e) {
-            $mensagem = "Erro: Cliente possui pedidos vinculados e não pode ser removido!";
+        if (!usuario_admin()) {
+            $mensagem = "Acesso negado para remover clientes.";
             $tipo_mensagem = "erro";
+        } else {
+            $id_cliente = (int)$_POST["id_cliente"];
+            try {
+                execute_query("DELETE FROM clientes WHERE id_cliente = ?", [$id_cliente]);
+                $mensagem = "Cliente removido com sucesso!";
+                $tipo_mensagem = "sucesso";
+            } catch(Exception $e) {
+                $mensagem = "Erro: Cliente possui pedidos vinculados e não pode ser removido!";
+                $tipo_mensagem = "erro";
+            }
         }
     }
 }
@@ -45,18 +52,7 @@ $clientes = query_all("SELECT * FROM clientes ORDER BY nome ASC");
 </head>
 <body>
     <div class="container">
-        <nav class="navbar">
-            <div class="nav-logo">🍔 RestauSys</div>
-            <ul class="nav-links">
-                <li><a href="../index.php">Dashboard</a></li>
-                <li><a href="pedidos.php">PDV (Caixa)</a></li>
-                <li><a href="clientes.php" class="active">Clientes</a></li>
-                <li><a href="mesas.php">Mesas</a></li>
-                <li><a href="produtos.php">Produtos</a></li>
-                <li><a href="funcionarios.php">Funcionários</a></li>
-                <li><a href="despesas.php">Despesas</a></li>
-            </ul>
-        </nav>
+        <?php render_navegacao('clientes', '../'); ?>
 
         <header>
             <div class="header-content">
@@ -100,7 +96,7 @@ $clientes = query_all("SELECT * FROM clientes ORDER BY nome ASC");
                                 <tr>
                                     <th>Nome</th>
                                     <th>Contato</th>
-                                    <th>Ações</th>
+                                    <?php if (usuario_admin()): ?><th>Ações</th><?php endif; ?>
                                 </tr>
                             </thead>
                             <tbody>
@@ -111,13 +107,15 @@ $clientes = query_all("SELECT * FROM clientes ORDER BY nome ASC");
                                         <small><?= $c["telefone"] ?: "S/ Tel" ?></small><br>
                                         <small><?= $c["email"] ?: "S/ Email" ?></small>
                                     </td>
-                                    <td>
-                                        <form method="POST" style="display:inline;" onsubmit="return confirm('Deseja realmente remover?');">
-                                            <input type="hidden" name="acao" value="remover_cliente">
-                                            <input type="hidden" name="id_cliente" value="<?=$c["id_cliente"]?>">
-                                            <button type="submit" class="btn btn-remover" title="Remover">🗑️</button>
-                                        </form>
-                                    </td>
+                                    <?php if (usuario_admin()): ?>
+                                        <td>
+                                            <form method="POST" style="display:inline;" onsubmit="return confirm('Deseja realmente remover?');">
+                                                <input type="hidden" name="acao" value="remover_cliente">
+                                                <input type="hidden" name="id_cliente" value="<?=$c["id_cliente"]?>">
+                                                <button type="submit" class="btn btn-remover" title="Remover">🗑️</button>
+                                            </form>
+                                        </td>
+                                    <?php endif; ?>
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>

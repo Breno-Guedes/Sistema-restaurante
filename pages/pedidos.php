@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../config/config.php';
 
+exigir_autenticacao();
+
 // Variáveis de controle
 $mensagem = '';
 $tipo_mensagem = '';
@@ -235,18 +237,7 @@ if ($id_pedido_atual) {
 </head>
 <body>
     <div class="container">
-        <nav class="navbar">
-            <div class="nav-logo">🍔 RestauSys</div>
-            <ul class="nav-links">
-                <li><a href="../index.php">Dashboard</a></li>
-                <li><a href="pedidos.php" class="active">PDV (Caixa)</a></li>
-                <li><a href="clientes.php">Clientes</a></li>
-                <li><a href="mesas.php">Mesas</a></li>
-                <li><a href="produtos.php">Produtos</a></li>
-                <li><a href="funcionarios.php">Funcionários</a></li>
-                <li><a href="despesas.php">Despesas</a></li>
-            </ul>
-        </nav>
+        <?php render_navegacao('pedidos', '../'); ?>
         <header>
             <div class="header-content">
                 <h1>Sistema de Pedidos</h1>
@@ -332,7 +323,7 @@ if ($id_pedido_atual) {
                         </div>
 
                         <button type="submit" class="btn btn-criar">
-                            <span class="btn-icon">➕</span> Criar Pedido
+                            <span class="btn-icon"></span> Criar Pedido
                         </button>
                     </div>
                 </form>

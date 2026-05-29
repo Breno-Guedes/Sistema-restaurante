@@ -1,6 +1,9 @@
 <?php
 require_once __DIR__ . "/../config/config.php";
 
+exigir_autenticacao();
+exigir_admin();
+
 $mensagem = "";
 $tipo_mensagem = "";
 
@@ -61,18 +64,7 @@ $valor_total = ($total_despesas["total"] ?? 0) + ($total_salarios["total"] ?? 0)
 </head>
 <body>
     <div class="container">
-        <nav class="navbar">
-            <div class="nav-logo">🍔 RestauSys</div>
-            <ul class="nav-links">
-                <li><a href="../index.php">Dashboard</a></li>
-                <li><a href="pedidos.php">PDV (Caixa)</a></li>
-                <li><a href="clientes.php">Clientes</a></li>
-                <li><a href="mesas.php">Mesas</a></li>
-                <li><a href="produtos.php">Produtos</a></li>
-                <li><a href="funcionarios.php">Funcionários</a></li>
-                <li><a href="despesas.php" class="active">Despesas</a></li>
-            </ul>
-        </nav>
+        <?php render_navegacao('despesas', '../'); ?>
 
         <header>
             <div class="header-content">

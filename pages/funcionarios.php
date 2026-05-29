@@ -1,6 +1,9 @@
 <?php
 require_once __DIR__ . "/../config/config.php";
 
+exigir_autenticacao();
+exigir_admin();
+
 $mensagem = "";
 $tipo_mensagem = "";
 
@@ -17,6 +20,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if ($nome === "" || $cargo === "") {
             $mensagem = "Preencha nome e cargo corretamente.";
+            $tipo_mensagem = "erro";
+        } elseif (mb_strtolower($nome) === "admin" || mb_strtolower($cargo) === "administrador") {
+            $mensagem = "O administrador fixo não pode ser cadastrado pela tela de funcionários.";
             $tipo_mensagem = "erro";
         } else {
             try {
@@ -57,18 +63,7 @@ $funcionarios = query_all("SELECT * FROM funcionarios ORDER BY nome ASC");
 </head>
 <body>
     <div class="container">
-        <nav class="navbar">
-            <div class="nav-logo">🍔 RestauSys</div>
-            <ul class="nav-links">
-                <li><a href="../index.php">Dashboard</a></li>
-                <li><a href="pedidos.php">PDV (Caixa)</a></li>
-                <li><a href="clientes.php">Clientes</a></li>
-                <li><a href="mesas.php">Mesas</a></li>
-                <li><a href="produtos.php">Produtos</a></li>
-                <li><a href="funcionarios.php" class="active">Funcionários</a></li>
-                <li><a href="despesas.php">Despesas</a></li>
-            </ul>
-        </nav>
+        <?php render_navegacao('funcionarios', '../'); ?>
 
         <header>
             <div class="header-content">
@@ -80,6 +75,11 @@ $funcionarios = query_all("SELECT * FROM funcionarios ORDER BY nome ASC");
             <?php if ($mensagem): ?>
                 <div class="mensagem mensagem-<?=$tipo_mensagem?>"><?=$mensagem?></div>
             <?php endif; ?>
+
+            <div class="card" style="border-top-color: #0ea5e9; margin-bottom: 20px;">
+                <strong>Administrador fixo:</strong> login admin e senha admin.
+                Este usuário não faz parte do cadastro de funcionários e não pode ser criado, editado ou removido por esta tela.
+            </div>
 
             <div class="dashboard-grid">
                 <div class="card" style="border-top-color: #0ea5e9;">
