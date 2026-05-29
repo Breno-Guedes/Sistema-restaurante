@@ -64,8 +64,8 @@ $funcionarios = query_all("SELECT * FROM funcionarios ORDER BY nome ASC");
                 <li><a href="pedidos.php">PDV (Caixa)</a></li>
                 <li><a href="clientes.php">Clientes</a></li>
                 <li><a href="mesas.php">Mesas</a></li>
-                <li><a href="funcionarios.php" class="active">Funcionários</a></li>
                 <li><a href="produtos.php">Produtos</a></li>
+                <li><a href="funcionarios.php" class="active">Funcionários</a></li>
                 <li><a href="despesas.php">Despesas</a></li>
             </ul>
         </nav>
@@ -102,7 +102,7 @@ $funcionarios = query_all("SELECT * FROM funcionarios ORDER BY nome ASC");
                             <label>Data de Contratacao:</label>
                             <input type="date" name="data_contratacao">
                         </div>
-                        <button type="submit" class="btn btn-adicionar">Salvar Funcionario</button>
+                        <button type="submit" class="btn btn-adicionar">Salvar Funcionário</button>
                     </form>
                 </div>
 
