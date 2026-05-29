@@ -243,7 +243,7 @@ if ($id_pedido_atual) {
                 <li><a href="clientes.php">Clientes</a></li>
                 <li><a href="mesas.php">Mesas</a></li>
                 <li><a href="produtos.php">Produtos</a></li>
-                <li><a href="funcionarios.php">Funcionarios</a></li>
+                <li><a href="funcionarios.php">Funcionários</a></li>
                 <li><a href="despesas.php">Despesas</a></li>
             </ul>
         </nav>

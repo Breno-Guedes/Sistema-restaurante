@@ -92,7 +92,7 @@ $produtos = query_all(
                 <li><a href="clientes.php">Clientes</a></li>
                 <li><a href="mesas.php">Mesas</a></li>
                 <li><a href="produtos.php" class="active">Produtos</a></li>
-                <li><a href="funcionarios.php">Funcionarios</a></li>
+                <li><a href="funcionarios.php">Funcionários</a></li>
                 <li><a href="despesas.php">Despesas</a></li>
             </ul>
         </nav>

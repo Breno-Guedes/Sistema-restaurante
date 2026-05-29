@@ -69,7 +69,7 @@ $valor_total = ($total_despesas["total"] ?? 0) + ($total_salarios["total"] ?? 0)
                 <li><a href="clientes.php">Clientes</a></li>
                 <li><a href="mesas.php">Mesas</a></li>
                 <li><a href="produtos.php">Produtos</a></li>
-                <li><a href="funcionarios.php">Funcionarios</a></li>
+                <li><a href="funcionarios.php">Funcionários</a></li>
                 <li><a href="despesas.php" class="active">Despesas</a></li>
             </ul>
         </nav>
