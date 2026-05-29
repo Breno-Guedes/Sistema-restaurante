@@ -47,12 +47,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
-// Buscar Faturamento
-$faturamento = query_one("SELECT SUM(ip.quantidade * ip.preco_unitario) as total 
-                          FROM itens_pedido ip 
-                          JOIN pedidos p ON ip.id_pedido = p.id_pedido 
-                          WHERE p.status = 'fechado'");
-$total_faturamento = $faturamento["total"] ?? 0;
+// Buscar Vendas
+$vendas = query_one("SELECT SUM(ip.quantidade * ip.preco_unitario) as total 
+                     FROM itens_pedido ip 
+                     JOIN pedidos p ON ip.id_pedido = p.id_pedido 
+                     WHERE p.status = 'fechado'");
+$total_vendas = $vendas["total"] ?? 0;
+
+// Buscar Despesas (inclui salarios)
+$despesas = query_one("SELECT SUM(valor) as total FROM despesas");
+$salarios = query_one("SELECT SUM(salario) as total FROM funcionarios");
+$total_despesas = ($despesas["total"] ?? 0) + ($salarios["total"] ?? 0);
+
+// Faturamento Total = Vendas - Despesas
+$total_faturamento = $total_vendas - $total_despesas;
 
 // Pedidos Abertos
 $pedidos_abertos = query_all("SELECT p.id_pedido, c.nome, m.numero, p.data_pedido 
@@ -97,6 +105,9 @@ $mesas = query_all("SELECT * FROM mesas ORDER BY numero ASC");
             <div style="display: flex; gap: 10px; margin-bottom: 20px;">
                 <a href="pages/pedidos.php" class="btn-link">Ir para PDV (Novo Pedido/Ponto de Venda)</a>
                 <a href="pages/pedidos.php#finalizados" class="btn-link">Ver Pedidos Finalizados</a>
+                <a href="pages/produtos.php" class="btn-link">Produtos</a>
+                <a href="pages/funcionarios.php" class="btn-link">Funcionários</a>
+                <a href="pages/despesas.php" class="btn-link">Despesas</a>
             </div>
             
             <div class="dashboard-grid">
@@ -104,7 +115,7 @@ $mesas = query_all("SELECT * FROM mesas ORDER BY numero ASC");
                 <div class="card" style="border-top-color: #28a745;">
                     <h3>Faturamento Total</h3>
                     <p style="font-size: 2.5em; font-weight: bold; color: #28a745;">R$ <?=number_format($total_faturamento, 2, ",", ".")?></p>
-                    <p style="color: #666; font-size: 0.9em; margin-top: 10px;">Com base em todos os pedidos finalizados.</p>
+                    <p style="color: #666; font-size: 0.9em; margin-top: 10px;">Vendas finalizadas - despesas (inclui salarios).</p>
                 </div>
                 
                 <!-- Pedidos Ativos -->
@@ -209,12 +220,10 @@ $mesas = query_all("SELECT * FROM mesas ORDER BY numero ASC");
                 
             </div>
         </main>
+        <footer class="app-footer">
+            &copy; <?=date("Y")?> Sistema RestauSys. Todos os direitos reservados.
+        </footer>
     </div>
 </body>
-<footer>
-    <div class="container" style="text-align: center; padding: 20px 0; color: #666; font-size: 0.9em; margin-top: 20px;">
-        &copy; <?=date("Y")?> Sistema RestauSys. Todos os direitos reservados.
-    </div>
-</footer>
 </html>
 

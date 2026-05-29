@@ -25,7 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
     try {
         $id_cliente = (int)$_POST['id_cliente'] ?? 0;
         $id_mesa = (int)$_POST['id_mesa'] ?? 0;
-        $id_funcionario = 1;
+        $id_funcionario = (int)($_POST['id_funcionario'] ?? 0);
+        $id_funcionario = $id_funcionario > 0 ? $id_funcionario : null;
 
         if ($id_cliente <= 0 || $id_mesa <= 0) {
             throw new Exception('Selecione cliente e mesa válidos!');
@@ -38,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
         }
 
         $sql = "INSERT INTO pedidos (id_cliente, id_mesa, id_funcionario, status) 
-                VALUES (?, ?, ?, 'aberto')";
+            VALUES (?, ?, ?, 'aberto')";
         execute_query($sql, [$id_cliente, $id_mesa, $id_funcionario]);
         
         $id_pedido_atual = get_last_insert_id();
@@ -166,6 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
 $clientes = query_all("SELECT id_cliente, nome FROM clientes ORDER BY nome");
 $mesas = query_all("SELECT id_mesa, numero, capacidade, status FROM mesas ORDER BY numero");
 $produtos = query_all("SELECT id_produto, nome, descricao, preco, estoque FROM produtos ORDER BY nome");
+$funcionarios = query_all("SELECT id_funcionario, nome, cargo FROM funcionarios ORDER BY nome");
 
 $pedidos_abertos = query_all(
     "SELECT p.id_pedido, c.nome, m.numero, p.data_pedido
@@ -240,6 +242,9 @@ if ($id_pedido_atual) {
                 <li><a href="pedidos.php" class="active">PDV (Caixa)</a></li>
                 <li><a href="clientes.php">Clientes</a></li>
                 <li><a href="mesas.php">Mesas</a></li>
+                <li><a href="produtos.php">Produtos</a></li>
+                <li><a href="funcionarios.php">Funcionarios</a></li>
+                <li><a href="despesas.php">Despesas</a></li>
             </ul>
         </nav>
         <header>
@@ -303,6 +308,27 @@ if ($id_pedido_atual) {
                                     </option>
                                 <?php endforeach; ?>
                             </select>
+                        </div>
+
+                        <div class="form-grupo">
+                            <label for="id_funcionario">
+                                <span class="label-icon"></span> Funcionario:
+                            </label>
+                            <?php if (!empty($funcionarios)): ?>
+                                <select name="id_funcionario" id="id_funcionario">
+                                    <option value="">-- Selecionar funcionario --</option>
+                                    <?php foreach ($funcionarios as $funcionario): ?>
+                                        <option value="<?php echo $funcionario['id_funcionario']; ?>">
+                                            <?php echo htmlspecialchars($funcionario['nome']); ?>
+                                            (<?php echo htmlspecialchars($funcionario['cargo']); ?>)
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            <?php else: ?>
+                                <div style="padding: 10px; background: #f8f9fa; border-radius: 6px; color: #666;">
+                                    Nenhum funcionario cadastrado.
+                                </div>
+                            <?php endif; ?>
                         </div>
 
                         <button type="submit" class="btn btn-criar">
@@ -554,6 +580,9 @@ if ($id_pedido_atual) {
                 <?php endif; ?>
             <?php endif; ?>
         </main>
+        <footer class="app-footer">
+            &copy; <?php echo date('Y'); ?> Sistema RestauSys. Todos os direitos reservados.
+        </footer>
     </div>
 
     <script>

@@ -63,6 +63,9 @@ $mesas = query_all("SELECT * FROM mesas ORDER BY numero ASC");
                 <li><a href="pedidos.php">PDV (Caixa)</a></li>
                 <li><a href="clientes.php">Clientes</a></li>
                 <li><a href="mesas.php" class="active">Mesas</a></li>
+                <li><a href="produtos.php">Produtos</a></li>
+                <li><a href="funcionarios.php">Funcionarios</a></li>
+                <li><a href="despesas.php">Despesas</a></li>
             </ul>
         </nav>
 
@@ -138,6 +141,9 @@ $mesas = query_all("SELECT * FROM mesas ORDER BY numero ASC");
                 </div>
             </div>
         </main>
+        <footer class="app-footer">
+            &copy; <?=date("Y")?> Sistema RestauSys. Todos os direitos reservados.
+        </footer>
     </div>
 </body>
 </html>

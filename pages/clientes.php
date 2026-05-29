@@ -52,12 +52,15 @@ $clientes = query_all("SELECT * FROM clientes ORDER BY nome ASC");
                 <li><a href="pedidos.php">PDV (Caixa)</a></li>
                 <li><a href="clientes.php" class="active">Clientes</a></li>
                 <li><a href="mesas.php">Mesas</a></li>
+                <li><a href="produtos.php">Produtos</a></li>
+                <li><a href="funcionarios.php">Funcionários</a></li>
+                <li><a href="despesas.php">Despesas</a></li>
             </ul>
         </nav>
 
         <header>
             <div class="header-content">
-                <h1>👥 Gestão de Clientes</h1>
+                <h1>Gestão de Clientes</h1>
                 <p class="header-subtitle">Cadastre e gerencie os clientes do estabelecimento</p>
             </div>
         </header>
@@ -123,6 +126,9 @@ $clientes = query_all("SELECT * FROM clientes ORDER BY nome ASC");
                 </div>
             </div>
         </main>
+        <footer class="app-footer">
+            &copy; <?=date("Y")?> Sistema RestauSys. Todos os direitos reservados.
+        </footer>
     </div>
 </body>
 </html>
