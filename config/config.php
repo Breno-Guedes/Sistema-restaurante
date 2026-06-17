@@ -122,13 +122,14 @@ function render_navegacao(string $ativo, string $base_path = '../'): void
     $usuario = nome_usuario_ativo();
 
     $itens = [
-        ['chave' => 'dashboard', 'titulo' => 'Dashboard', 'href' => $base_path . 'index.php', 'roles' => [PERFIL_ADMIN, PERFIL_GARCOM]],
+        ['chave' => 'dashboard', 'titulo' => 'Inicio', 'href' => $base_path . 'index.php', 'roles' => [PERFIL_ADMIN, PERFIL_GARCOM]],
         ['chave' => 'pedidos', 'titulo' => 'Caixa', 'href' => $base_path . 'pages/pedidos.php', 'roles' => [PERFIL_ADMIN, PERFIL_GARCOM]],
         ['chave' => 'clientes', 'titulo' => 'Clientes', 'href' => $base_path . 'pages/clientes.php', 'roles' => [PERFIL_ADMIN, PERFIL_GARCOM]],
         ['chave' => 'mesas', 'titulo' => 'Mesas', 'href' => $base_path . 'pages/mesas.php', 'roles' => [PERFIL_ADMIN, PERFIL_GARCOM]],
-        ['chave' => 'produtos', 'titulo' => 'Produtos', 'href' => $base_path . 'pages/produtos.php', 'roles' => [PERFIL_ADMIN, PERFIL_GARCOM]],
-        ['chave' => 'funcionarios', 'titulo' => 'Funcionários', 'href' => $base_path . 'pages/funcionarios.php', 'roles' => [PERFIL_ADMIN]],
-        ['chave' => 'despesas', 'titulo' => 'Despesas', 'href' => $base_path . 'pages/despesas.php', 'roles' => [PERFIL_ADMIN]],
+        ['chave' => 'produtos', 'titulo' => 'Prod.', 'href' => $base_path . 'pages/produtos.php', 'roles' => [PERFIL_ADMIN, PERFIL_GARCOM]],
+        ['chave' => 'funcionarios', 'titulo' => 'Equi.', 'href' => $base_path . 'pages/funcionarios.php', 'roles' => [PERFIL_ADMIN]],
+        ['chave' => 'despesas', 'titulo' => 'Cus.', 'href' => $base_path . 'pages/despesas.php', 'roles' => [PERFIL_ADMIN]],
+        ['chave' => 'relatorios', 'titulo' => 'Relat.', 'href' => $base_path . 'pages/relatorios.php', 'roles' => [PERFIL_ADMIN]],
     ];
 
     echo '<nav class="navbar">';

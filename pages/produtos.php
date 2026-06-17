@@ -168,11 +168,7 @@ $produtos = query_all(
                             <button type="submit" class="btn btn-adicionar">Salvar Produto</button>
                         </form>
                     </div>
-                <?php else: ?>
-                    <div class="card" style="border-top-color: #22c55e;">
-                        <h3>Catálogo disponível</h3>
-                        <p style="color: #666;">O perfil Garçom pode consultar os produtos, mas não alterar preços, estoque ou cadastro.</p>
-                    </div>
+                    
                 <?php endif; ?>
 
                 <div class="card" style="grid-column: span 1; border-top-color: #667eea;">

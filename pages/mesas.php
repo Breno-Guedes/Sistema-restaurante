@@ -99,11 +99,7 @@ $mesas = query_all("SELECT * FROM mesas ORDER BY numero ASC");
                             <button type="submit" class="btn " style="background: #6c757d; color: white;">Salvar Mesa</button>
                         </form>
                     </div>
-                <?php else: ?>
-                    <div class="card" style="border-top-color: #6c757d;">
-
-                        <p style="color: #666;">O perfil Garçom pode apenas consultar e liberar mesas ocupadas.</p>
-                    </div>
+                    
                 <?php endif; ?>
 
                 <!-- Lista de Mesas -->

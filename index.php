@@ -208,6 +208,7 @@ $perfil_logado = usuario_admin() ? "Administrador" : "Garçom";
                     <a href="pages/produtos.php" class="btn-link">Produtos</a>
                     <a href="pages/funcionarios.php" class="btn-link">Funcionários</a>
                     <a href="pages/despesas.php" class="btn-link">Despesas</a>
+                    <a href="pages/relatorios.php" class="btn-link">Relatorios</a>
                 </div>
             <?php endif; ?>
 
