@@ -48,6 +48,26 @@ function get_last_insert_id(): int
     return (int) $pdo->lastInsertId();
 }
 
+function cliente_possui_pedidos(int $id_cliente): bool
+{
+    $resultado = query_one("SELECT COUNT(*) AS total FROM pedidos WHERE id_cliente = ?", [$id_cliente]);
+    return (int)($resultado['total'] ?? 0) > 0;
+}
+
+function mesa_possui_pedidos(int $id_mesa, ?string $status = null): bool
+{
+    $params = [$id_mesa];
+    $where_status = '';
+
+    if ($status !== null) {
+        $where_status = ' AND status = ?';
+        $params[] = $status;
+    }
+
+    $resultado = query_one("SELECT COUNT(*) AS total FROM pedidos WHERE id_mesa = ?" . $where_status, $params);
+    return (int)($resultado['total'] ?? 0) > 0;
+}
+
 function perfil_ativo(): string
 {
     return $_SESSION['perfil'] ?? '';

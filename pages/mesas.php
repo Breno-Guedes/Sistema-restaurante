@@ -34,11 +34,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         } else {
             $id_mesa = (int)$_POST["id_mesa"];
             try {
-                execute_query("DELETE FROM mesas WHERE id_mesa = ?", [$id_mesa]);
-                $mensagem = "Mesa removida com sucesso!";
-                $tipo_mensagem = "sucesso";
+                if (mesa_possui_pedidos($id_mesa)) {
+                    $mensagem = "Erro: Mesa possui pedidos vinculados e não pode ser removida!";
+                    $tipo_mensagem = "erro";
+                } else {
+                    execute_query("DELETE FROM mesas WHERE id_mesa = ?", [$id_mesa]);
+                    $mensagem = "Mesa removida com sucesso!";
+                    $tipo_mensagem = "sucesso";
+                }
             } catch(Exception $e) {
-                $mensagem = "Erro: Mesa possui pedidos vinculados e não pode ser removida!";
+                $mensagem = "Erro ao remover mesa.";
                 $tipo_mensagem = "erro";
             }
         }
@@ -47,9 +52,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($acao === "liberar_mesa") {
         $id_mesa = (int)$_POST["id_mesa"];
         try {
-            execute_query("UPDATE mesas SET status = 'livre' WHERE id_mesa = ?", [$id_mesa]);
-            $mensagem = "Mesa liberada com sucesso!";
-            $tipo_mensagem = "sucesso";
+            if (mesa_possui_pedidos($id_mesa, 'aberto')) {
+                $mensagem = "Erro: Mesa possui pedido em aberto e não pode ser liberada!";
+                $tipo_mensagem = "erro";
+            } else {
+                execute_query("UPDATE mesas SET status = 'livre' WHERE id_mesa = ?", [$id_mesa]);
+                $mensagem = "Mesa liberada com sucesso!";
+                $tipo_mensagem = "sucesso";
+            }
         } catch(Exception $e) {
             $mensagem = "Erro ao liberar mesa.";
             $tipo_mensagem = "erro";

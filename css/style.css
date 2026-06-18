@@ -789,6 +789,78 @@ main {
     font-weight: 600;
 }
 
+.filtros-finalizados {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) minmax(180px, 240px) auto;
+    gap: 16px;
+    align-items: end;
+    margin-bottom: 12px;
+}
+
+.filtros-finalizados .form-grupo {
+    margin-bottom: 0;
+}
+
+.filtros-finalizados-acoes {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.filtros-finalizados-acoes .btn {
+    width: auto;
+    white-space: nowrap;
+}
+
+.resultado-finalizados {
+    color: #666;
+    font-size: 0.92rem;
+    margin: 6px 0 14px;
+}
+
+.paginacao-finalizados {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+}
+
+.paginacao-finalizados .btn {
+    width: auto;
+}
+
+.paginacao-numeros {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.paginacao-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    border-radius: 6px;
+    color: var(--text);
+    background: #f3f4f6;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.paginacao-link.ativo {
+    background: var(--accent);
+    color: white;
+}
+
+.paginacao-desabilitada {
+    opacity: 0.45;
+    pointer-events: none;
+}
+
 .item-preco,
 .item-subtotal {
     text-align: right;
@@ -950,6 +1022,26 @@ main {
     .form-row {
         grid-template-columns: 1fr;
         gap: 15px;
+    }
+
+    .filtros-finalizados {
+        grid-template-columns: 1fr;
+    }
+
+    .filtros-finalizados-acoes,
+    .paginacao-finalizados {
+        justify-content: stretch;
+    }
+
+    .filtros-finalizados-acoes .btn,
+    .paginacao-finalizados .btn {
+        flex: 1;
+    }
+
+    .paginacao-numeros {
+        order: -1;
+        width: 100%;
+        justify-content: center;
     }
 
     .btn-finalizar {

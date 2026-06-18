@@ -180,6 +180,38 @@ $pedidos_abertos = query_all(
      ORDER BY p.data_pedido DESC"
 );
 
+$busca_finalizados = trim($_GET['busca_finalizados'] ?? '');
+$pagamento_finalizados = trim($_GET['pagamento_finalizados'] ?? '');
+$pagina_finalizados = max(1, (int)($_GET['pagina_finalizados'] ?? 1));
+$itens_por_pagina_finalizados = 10;
+$where_finalizados = ["p.status = 'fechado'"];
+$params_finalizados = [];
+
+if ($busca_finalizados !== '') {
+    $where_finalizados[] = "(CAST(p.id_pedido AS TEXT) LIKE ? OR c.nome LIKE ? OR CAST(m.numero AS TEXT) LIKE ? OR p.forma_de_pagamento LIKE ?)";
+    $termo_busca = '%' . $busca_finalizados . '%';
+    array_push($params_finalizados, $termo_busca, $termo_busca, $termo_busca, $termo_busca);
+}
+
+if ($pagamento_finalizados !== '') {
+    $where_finalizados[] = "p.forma_de_pagamento = ?";
+    $params_finalizados[] = $pagamento_finalizados;
+}
+
+$sql_where_finalizados = implode(' AND ', $where_finalizados);
+$total_finalizados_result = query_one(
+    "SELECT COUNT(*) AS total
+     FROM pedidos p
+     JOIN clientes c ON p.id_cliente = c.id_cliente
+     JOIN mesas m ON p.id_mesa = m.id_mesa
+     WHERE " . $sql_where_finalizados,
+    $params_finalizados
+);
+$total_pedidos_finalizados = (int)($total_finalizados_result['total'] ?? 0);
+$total_paginas_finalizados = max(1, (int)ceil($total_pedidos_finalizados / $itens_por_pagina_finalizados));
+$pagina_finalizados = min($pagina_finalizados, $total_paginas_finalizados);
+$offset_finalizados = ($pagina_finalizados - 1) * $itens_por_pagina_finalizados;
+
 $pedidos_finalizados = query_all(
     "SELECT p.id_pedido, c.nome, m.numero, p.data_pedido, p.forma_de_pagamento,
             SUM(ip.quantidade * ip.preco_unitario) as total
@@ -187,9 +219,11 @@ $pedidos_finalizados = query_all(
      JOIN clientes c ON p.id_cliente = c.id_cliente
      JOIN mesas m ON p.id_mesa = m.id_mesa
      LEFT JOIN itens_pedido ip ON p.id_pedido = ip.id_pedido
-     WHERE p.status = 'fechado'
+     WHERE " . $sql_where_finalizados . "
      GROUP BY p.id_pedido
-     ORDER BY p.data_pedido DESC"
+     ORDER BY p.data_pedido DESC
+     LIMIT ? OFFSET ?",
+    array_merge($params_finalizados, [$itens_por_pagina_finalizados, $offset_finalizados])
 );
 
 // Se houver um pedido em andamento, buscar seus itens e informações
@@ -367,8 +401,45 @@ if ($id_pedido_atual) {
 
             <section class="secao secao-lista" id="finalizados">
                 <h2>Pedidos Finalizados</h2>
+                <form method="GET" action="pedidos.php#finalizados" class="filtros-finalizados">
+                    <div class="form-grupo">
+                        <label for="busca_finalizados">Buscar:</label>
+                        <input
+                            type="search"
+                            name="busca_finalizados"
+                            id="busca_finalizados"
+                            placeholder="Nome do cliente"
+                            value="<?php echo htmlspecialchars($busca_finalizados); ?>"
+                        >
+                    </div>
+
+                    <div class="form-grupo">
+                        <label for="pagamento_finalizados">Pagamento:</label>
+                        <select name="pagamento_finalizados" id="pagamento_finalizados">
+                            <option value="">Todos</option>
+                            <?php foreach (['DINHEIRO' => 'Dinheiro', 'PIX' => 'PIX', 'CARTAO' => 'Cartão'] as $valor => $rotulo): ?>
+                                <option value="<?php echo $valor; ?>" <?php echo $pagamento_finalizados === $valor ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($rotulo); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <div class="filtros-finalizados-acoes">
+                        <button type="submit" class="btn btn-criar">Filtrar</button>
+                        <a class="btn btn-secundario" href="pedidos.php#finalizados">Limpar</a>
+                    </div>
+                </form>
+
+                <div class="resultado-finalizados">
+                    <?php echo $total_pedidos_finalizados; ?> pedido(s) encontrado(s)
+                    <?php if ($total_pedidos_finalizados > 0): ?>
+                        | Página <?php echo $pagina_finalizados; ?> de <?php echo $total_paginas_finalizados; ?>
+                    <?php endif; ?>
+                </div>
+
                 <?php if (empty($pedidos_finalizados)): ?>
-                    <p style="color: #666;">Nenhum pedido finalizado ainda.</p>
+                    <p style="color: #666;">Nenhum pedido finalizado encontrado.</p>
                 <?php else: ?>
                     <div class="tabela-container">
                         <table class="tabela">
@@ -396,6 +467,58 @@ if ($id_pedido_atual) {
                             </tbody>
                         </table>
                     </div>
+
+                    <?php if ($total_paginas_finalizados > 1): ?>
+                        <nav class="paginacao-finalizados" aria-label="Paginação de pedidos finalizados">
+                            <?php
+                                $query_anterior = http_build_query([
+                                    'busca_finalizados' => $busca_finalizados,
+                                    'pagamento_finalizados' => $pagamento_finalizados,
+                                    'pagina_finalizados' => max(1, $pagina_finalizados - 1),
+                                ]);
+                                $query_proxima = http_build_query([
+                                    'busca_finalizados' => $busca_finalizados,
+                                    'pagamento_finalizados' => $pagamento_finalizados,
+                                    'pagina_finalizados' => min($total_paginas_finalizados, $pagina_finalizados + 1),
+                                ]);
+                            ?>
+                            <a
+                                class="btn btn-secundario <?php echo $pagina_finalizados <= 1 ? 'paginacao-desabilitada' : ''; ?>"
+                                href="pedidos.php?<?php echo htmlspecialchars($query_anterior); ?>#finalizados"
+                            >
+                                Anterior
+                            </a>
+
+                            <div class="paginacao-numeros">
+                                <?php
+                                    $inicio_paginacao = max(1, $pagina_finalizados - 2);
+                                    $fim_paginacao = min($total_paginas_finalizados, $pagina_finalizados + 2);
+                                ?>
+                                <?php for ($pagina = $inicio_paginacao; $pagina <= $fim_paginacao; $pagina++): ?>
+                                    <?php
+                                        $query_pagina = http_build_query([
+                                            'busca_finalizados' => $busca_finalizados,
+                                            'pagamento_finalizados' => $pagamento_finalizados,
+                                            'pagina_finalizados' => $pagina,
+                                        ]);
+                                    ?>
+                                    <a
+                                        class="paginacao-link <?php echo $pagina === $pagina_finalizados ? 'ativo' : ''; ?>"
+                                        href="pedidos.php?<?php echo htmlspecialchars($query_pagina); ?>#finalizados"
+                                    >
+                                        <?php echo $pagina; ?>
+                                    </a>
+                                <?php endfor; ?>
+                            </div>
+
+                            <a
+                                class="btn btn-secundario <?php echo $pagina_finalizados >= $total_paginas_finalizados ? 'paginacao-desabilitada' : ''; ?>"
+                                href="pedidos.php?<?php echo htmlspecialchars($query_proxima); ?>#finalizados"
+                            >
+                                Próxima
+                            </a>
+                        </nav>
+                    <?php endif; ?>
                 <?php endif; ?>
             </section>
 

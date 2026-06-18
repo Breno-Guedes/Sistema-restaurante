@@ -74,11 +74,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             } else {
                 $id_cliente = (int)$_POST["id_cliente"];
                 try {
-                    execute_query("DELETE FROM clientes WHERE id_cliente = ?", [$id_cliente]);
-                    $mensagem = "Cliente removido com sucesso!";
-                    $tipo_mensagem = "sucesso";
+                    if (cliente_possui_pedidos($id_cliente)) {
+                        $mensagem = "Erro: Cliente possui pedidos vinculados e não pode ser removido!";
+                        $tipo_mensagem = "erro";
+                    } else {
+                        execute_query("DELETE FROM clientes WHERE id_cliente = ?", [$id_cliente]);
+                        $mensagem = "Cliente removido com sucesso!";
+                        $tipo_mensagem = "sucesso";
+                    }
                 } catch (Exception $e) {
-                    $mensagem = "Erro: Cliente possui pedidos vinculados e não pode ser removido!";
+                    $mensagem = "Erro ao remover cliente.";
                     $tipo_mensagem = "erro";
                 }
             }

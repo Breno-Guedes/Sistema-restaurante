@@ -263,7 +263,7 @@ $produtos_menor_saida = query_all(
                                         <td><?=dinheiro((float)$garcom["faturamento"])?></td>
                                     </tr>
                                 <?php endforeach; ?>
-                                <?php if (empty($ranking_garcons)): ?><tr><td colspan="4">Nenhum pedido com garcom registrado.</td></tr><?php endif; ?>
+                                <?php if (empty($ranking_garcons)): ?><tr><td colspan="4">Nenhum pedido com garçom registrado.</td></tr><?php endif; ?>
                             </tbody>
                         </table>
                     </div>
