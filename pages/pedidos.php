@@ -405,15 +405,15 @@ if ($id_pedido_atual) {
                     <h2>Resumo do Pedido #<?php echo $id_pedido_atual; ?></h2>
                     <div class="resumo-grid">
                         <div class="resumo-card">
-                            <div class="resumo-label">👤 Cliente</div>
+                            <div class="resumo-label">Cliente</div>
                             <div class="resumo-valor"><?php echo htmlspecialchars($info_cliente['nome']); ?></div>
-                            <div class="resumo-details">☎️ <?php echo htmlspecialchars($info_cliente['telefone'] ?? 'N/A'); ?></div>
+                            <div class="resumo-details"><?php echo htmlspecialchars($info_cliente['telefone'] ?? 'N/A'); ?></div>
                         </div>
 
                         <div class="resumo-card">
-                            <div class="resumo-label">🪑 Mesa</div>
+                            <div class="resumo-label">Mesa</div>
                             <div class="resumo-valor">Mesa <?php echo $info_mesa['numero']; ?></div>
-                            <div class="resumo-details">👥 Capacidade: <?php echo $info_mesa['capacidade']; ?> pessoas</div>
+                            <div class="resumo-details">Capacidade: <?php echo $info_mesa['capacidade']; ?> pessoas</div>
                         </div>
 
                         <div class="resumo-card">

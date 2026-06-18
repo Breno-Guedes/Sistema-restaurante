@@ -99,7 +99,7 @@ $funcionarios = query_all("SELECT * FROM funcionarios ORDER BY nome ASC");
                             <input type="text" name="salario" placeholder="Ex: 2500.00">
                         </div>
                         <div class="form-grupo">
-                            <label>Data de Contratacao:</label>
+                            <label>Data de Contratação:</label>
                             <input type="date" name="data_contratacao">
                         </div>
                         <button type="submit" class="btn btn-adicionar">Salvar Funcionário</button>
