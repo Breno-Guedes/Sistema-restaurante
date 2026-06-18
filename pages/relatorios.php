@@ -173,7 +173,7 @@ $produtos_menor_saida = query_all(
                 </article>
 
                 <article class="metric-card">
-                    <span class="metric-label">Garcom com mais pedidos</span>
+                    <span class="metric-label">Garçom com mais pedidos</span>
                     <strong><?=htmlspecialchars($garcom_mais_pedidos["nome"] ?? "Sem registros")?></strong>
                     <small><?= (int)($garcom_mais_pedidos["quantidade_pedidos"] ?? 0) ?> pedidos | <?=dinheiro((float)($garcom_mais_pedidos["faturamento"] ?? 0))?></small>
                 </article>
@@ -194,9 +194,8 @@ $produtos_menor_saida = query_all(
                             <select name="periodo" id="periodo">
                                 <option value="todos" <?=$tipo_periodo === "todos" ? "selected" : ""?>>Todo o periodo</option>
                                 <option value="dia" <?=$tipo_periodo === "dia" ? "selected" : ""?>>Dia</option>
-                                <option value="mes" <?=$tipo_periodo === "mes" ? "selected" : ""?>>Mes</option>
+                                <option value="mes" <?=$tipo_periodo === "mes" ? "selected" : ""?>>Mês</option>
                                 <option value="ano" <?=$tipo_periodo === "ano" ? "selected" : ""?>>Ano</option>
-                                <option value="intervalo" <?=$tipo_periodo === "intervalo" ? "selected" : ""?>>Intervalo</option>
                             </select>
                         </div>
                         <button type="submit" class="btn btn-adicionar">Filtrar</button>
@@ -251,10 +250,10 @@ $produtos_menor_saida = query_all(
                 </section>
 
                 <section class="secao">
-                    <h2>Ranking de Garcons</h2>
+                    <h2>Ranking de Garçons</h2>
                     <div class="tabela-container">
                         <table class="tabela">
-                            <thead><tr><th>#</th><th>Garcom</th><th>Pedidos</th><th>Faturamento</th></tr></thead>
+                            <thead><tr><th>#</th><th>Garçom</th><th>Pedidos</th><th>Faturamento</th></tr></thead>
                             <tbody>
                                 <?php foreach ($ranking_garcons as $i => $garcom): ?>
                                     <tr>
